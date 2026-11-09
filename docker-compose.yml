@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    container_name: myscanner-db
+    environment:
+      POSTGRES_USER: scanner
+      POSTGRES_PASSWORD: scanner
+      POSTGRES_DB: scanner
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scanner -d scanner"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: myscanner-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://scanner:scanner@db:5432/scanner
+      SECRET_KEY: change-me-in-prod
+      DIRSEARCH_PATH: /opt/dirsearch/dirsearch.py
+      DIRSEARCH_DIR: /opt/dirsearch
+      NUCLEI_BIN: /usr/local/bin/nuclei
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python -m scripts.init_db &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  pg_data:

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Отчёт — скан #{{ scan.id }}{% endblock %}
+{% block content %}
+<h1>Отчёт по скану #{{ scan.id }}</h1>
+
+<div class="card">
+    <p>Target: <strong>{{ target.host }}</strong> ({{ target.ip or '—' }})</p>
+    <p>Статус: <strong>{{ scan.status }}</strong>
+       {% if scan.started_at and scan.finished_at %}
+       (длительность: {{ (scan.finished_at - scan.started_at).total_seconds()|round(1) }} с)
+       {% endif %}</p>
+    <p>Типы: {{ scan.scan_types|join(', ') }}</p>
+    {% if scan.error %}<p class="error">Ошибка: {{ scan.error }}</p>{% endif %}
+</div>
+
+<div class="stats">
+    <div class="stat"><div class="num">{{ total_findings }}</div>Findings</div>
+    <div class="stat"><div class="num">{{ total_urls }}</div>URLs</div>
+    {% for sev, cnt in severity_counts.items() %}
+        {% if cnt %}<div class="stat {{ sev }}"><div class="num">{{ cnt }}</div>{{ sev }}</div>{% endif %}
+    {% endfor %}
+</div>
+
+{% for type, items in findings_by_type.items() %}
+<section class="card">
+    <h2>{{ type }} ({{ items|length }})</h2>
+    <table>
+        <thead><tr><th>Severity</th><th>Title</th><th>URL</th></tr></thead>
+        <tbody>
+        {% for f in items %}
+        <tr>
+            <td class="sev-{{ f.severity }}">{{ f.severity or '—' }}</td>
+            <td>{{ f.title }}</td>
+            <td>{% if f.url %}<a href="{{ f.url }}" target="_blank">{{ f.url }}</a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endfor %}
+
+{% if dirsearch_urls %}
+<section class="card">
+    <h2>Найденные URL ({{ dirsearch_urls|length }})</h2>
+    <div style="max-height: 400px; overflow-y: auto;">
+        {% for u in dirsearch_urls %}
+        <div><a href="{{ u.url }}" target="_blank">{{ u.url }}</a></div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

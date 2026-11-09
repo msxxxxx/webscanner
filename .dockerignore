@@ -1,0 +1,16 @@
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+.idea
+.env
+security_reports
+*.md
+tests
+docker-compose.yml
+Dockerfile
+.dockerignore
+dirsearch-master

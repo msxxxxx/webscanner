@@ -1,0 +1,42 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; margin: 0; background: #f5f5f7; color: #222; }
+header { background: #1a1a2e; color: white; padding: 12px 24px; display: flex;
+         justify-content: space-between; align-items: center; }
+header a { color: white; text-decoration: none; margin-left: 16px; }
+header .logo { font-weight: bold; font-size: 1.2em; }
+main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+.card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+h1 { margin-top: 0; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #f8f8fa; font-size: 0.9em; color: #555; }
+form label { display: block; margin-bottom: 8px; }
+form input[type=text], form input[name=host] { width: 100%; padding: 8px;
+    border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
+form fieldset { border: 1px solid #ddd; border-radius: 6px; margin: 12px 0;
+    padding: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
+form fieldset label { display: inline-flex; align-items: center; gap: 4px; }
+button, .button { background: #4361ee; color: white; border: none;
+    padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 1em;
+    text-decoration: none; display: inline-block; }
+button:hover, .button:hover { background: #3a53d0; }
+button:disabled { background: #aaa; cursor: wait; }
+#form-msg { margin-left: 12px; color: #666; }
+.stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat { background: white; padding: 16px 20px; border-radius: 8px; min-width: 100px;
+        text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.stat .num { font-size: 1.8em; font-weight: bold; }
+.stat.critical .num { color: #d00000; }
+.stat.high .num { color: #e85d04; }
+.stat.medium .num { color: #faa307; }
+.stat.low .num { color: #219ebc; }
+.sev-critical { color: #d00000; font-weight: bold; }
+.sev-high { color: #e85d04; font-weight: bold; }
+.sev-medium { color: #faa307; font-weight: bold; }
+.sev-low { color: #219ebc; }
+.error { color: #d00000; }
+.status-pending { color: #888; }
+.status-running { color: #faa307; font-weight: bold; }
+.status-done    { color: #27ae60; font-weight: bold; }
+.status-failed  { color: #d00000; font-weight: bold; }

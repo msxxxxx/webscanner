@@ -12,11 +12,13 @@ from app.core.nuclei import run_nuclei
 ALL_TYPES = ["tcp", "ssl", "headers", "cert", "dirsearch", "nuclei"]
 
 
-def scan_target(host: str, scan_types: list[str] | None = None) -> dict:
-    """Полный скан одного хоста. Только выбранные проверки."""
+def scan_target(
+    host: str,
+    scan_types: list[str] | None = None,
+    web_ports_filter: list[int] | None = None,
+) -> dict:
+    """Полный скан одного хоста. web_ports_filter — ограничить dirsearch/nuclei."""
     scan_types = scan_types or ALL_TYPES
-    # если tcp не выбран, но выбраны веб-проверки — принудительно делаем tcp,
-    # чтобы узнать порты
     need_ports = any(t in scan_types for t in ("ssl", "headers", "cert", "dirsearch", "nuclei"))
     if need_ports and "tcp" not in scan_types:
         scan_types = ["tcp"] + scan_types
@@ -26,6 +28,7 @@ def scan_target(host: str, scan_types: list[str] | None = None) -> dict:
         "ip": None,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "scan_types": scan_types,
+        "web_ports_filter": web_ports_filter,
         "tcp": [],
         "web_ports": [],
         "ssl": [],
@@ -43,7 +46,6 @@ def scan_target(host: str, scan_types: list[str] | None = None) -> dict:
         result["finished_at"] = datetime.now(timezone.utc).isoformat()
         return result
 
-    # 1) TCP / web ports
     tcp_results, web_ports = scan_tcp_host(host)
     result["tcp"] = tcp_results
     result["web_ports"] = web_ports
@@ -53,7 +55,20 @@ def scan_target(host: str, scan_types: list[str] | None = None) -> dict:
         result["finished_at"] = datetime.now(timezone.utc).isoformat()
         return result
 
-    # 2) по каждому веб-порту — остальные проверки
+    # Фильтр: если пользователь указал порты — только они
+    if web_ports_filter:
+        filtered = [wp for wp in web_ports if wp["port"] in web_ports_filter]
+        if not filtered:
+            result["errors"].append(
+                f"Requested web ports {web_ports_filter} not among found {[wp['port'] for wp in web_ports]}"
+            )
+            logger.warning("%s: requested ports %s not found, skipping web scans",
+                           host, web_ports_filter)
+            result["finished_at"] = datetime.now(timezone.utc).isoformat()
+            return result
+        web_ports = filtered
+        logger.info("%s: filtered to web ports %s", host, web_ports_filter)
+
     for wp in web_ports:
         port = wp["port"]
         protocol = wp["protocol"]

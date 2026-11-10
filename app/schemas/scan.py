@@ -9,6 +9,10 @@ ScanType = Literal["tcp", "ssl", "headers", "cert", "dirsearch", "nuclei"]
 class ScanCreate(BaseModel):
     host: str = Field(..., min_length=1, max_length=255)
     scan_types: list[ScanType] = Field(default_factory=lambda: ["tcp"])
+    web_ports: list[int] | None = Field(
+        default=None,
+        description="Порты для dirsearch/nuclei. None/пусто = все найденные web-порты.",
+    )
 
 
 class ScanRead(BaseModel):
@@ -16,6 +20,7 @@ class ScanRead(BaseModel):
     target_id: int
     status: str
     scan_types: list[str]
+    web_ports: list[int] | None = None
     started_at: datetime | None
     finished_at: datetime | None
     error: str | None

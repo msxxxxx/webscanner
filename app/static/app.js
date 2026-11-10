@@ -52,13 +52,21 @@ document.querySelector("#scan-form")?.addEventListener("submit", async (e) => {
     const host = form.host.value.trim();
     const types = [...form.querySelectorAll("input[name=type]:checked")].map(c => c.value);
     if (!host) return;
+    const webPortsRaw = form.web_ports?.value.trim() || "";
+    let webPorts = null;
+    if (webPortsRaw) {
+        webPorts = webPortsRaw.split(",")
+            .map(s => parseInt(s.trim(), 10))
+            .filter(n => !isNaN(n) && n > 0 && n < 65536);
+        if (!webPorts.length) webPorts = null;
+    }
     const btn = form.querySelector("button");
     const msg = document.querySelector("#form-msg");
     btn.disabled = true; msg.textContent = "Создаю скан…";
     try {
         const scan = await api("/api/scans", {
             method: "POST",
-            body: JSON.stringify({ host, scan_types: types.length ? types : ["tcp"] }),
+            body: JSON.stringify({ host, scan_types: types.length ? types : ["tcp"], web_ports: webPorts }),
         });
         msg.textContent = `Скан #${scan.id} запущен`;
         setTimeout(() => location.href = `/scans/${scan.id}`, 500);
@@ -86,6 +94,14 @@ async function pollScan() {
     }
     if (s.status === "failed") return;
     setTimeout(pollScan, 2000);
+}
+
+async function loadScanInfo() {
+    const scan = await api(`/api/scans/${window.SCAN_ID}`);
+    const el = document.querySelector("#web-ports");
+    if (el) el.textContent = scan.web_ports?.length
+        ? scan.web_ports.join(", ")
+        : "все найденные";
 }
 
 async function loadFindings() {

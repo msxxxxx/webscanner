@@ -8,8 +8,12 @@ from app.services.target_service import get_or_create_target
 VALID_TYPES = {"tcp", "ssl", "headers", "cert", "dirsearch", "nuclei"}
 
 
-def create_scan(db: Session, host: str, scan_types: list[str]) -> Scan:
-    """Создаёт запись Scan (status=pending). Хост резолвится в Target."""
+def create_scan(
+    db: Session,
+    host: str,
+    scan_types: list[str],
+    web_ports: list[int] | None = None,
+) -> Scan:
     bad = set(scan_types) - VALID_TYPES
     if bad:
         raise ValueError(f"Unknown scan types: {bad}")
@@ -17,7 +21,12 @@ def create_scan(db: Session, host: str, scan_types: list[str]) -> Scan:
         scan_types = list(VALID_TYPES)
 
     target = get_or_create_target(db, host)
-    scan = Scan(target_id=target.id, status="pending", scan_types=scan_types)
+    scan = Scan(
+        target_id=target.id,
+        status="pending",
+        scan_types=scan_types,
+        web_ports=web_ports,
+    )
     db.add(scan)
     db.commit()
     db.refresh(scan)

@@ -16,7 +16,8 @@ class Scan(Base):
     target_id: Mapped[int] = mapped_column(ForeignKey("targets.id", ondelete="CASCADE"), index=True)
 
     status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending/running/done/failed
-    scan_types: Mapped[list] = mapped_column(JSONType, default=list)                # ["tcp","ssl","dirsearch","nuclei"]
+    scan_types: Mapped[list] = mapped_column(JSONType, default=list)      
+    web_ports: Mapped[list | None] = mapped_column(JSONType, nullable=True)          # ["tcp","ssl","dirsearch","nuclei"]
 
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

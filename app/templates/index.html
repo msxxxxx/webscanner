@@ -17,6 +17,7 @@
             <label><input type="checkbox" name="type" value="cert"> Cert</label>
             <label><input type="checkbox" name="type" value="dirsearch"> dirsearch</label>
             <label><input type="checkbox" name="type" value="nuclei"> nuclei</label>
+            <label>Web-порты для dirsearch/nuclei (через запятую, пусто = все найденные)<input name="web_ports" placeholder="443,8443"><small style="color:#888">Применяется только если выбраны dirsearch/nuclei</small></label>
         </fieldset>
         <button type="submit">Запустить скан</button>
         <span id="form-msg"></span>

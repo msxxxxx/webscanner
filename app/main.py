@@ -10,6 +10,8 @@ from app.models import Scan
 
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+import time
+STATIC_VERSION = int(time.time())
 
 
 @asynccontextmanager
@@ -46,7 +48,7 @@ app.include_router(reports.router)
 
 @app.get("/")
 def index(request: Request):
-    return templates.TemplateResponse(request, "index.html", {})
+    return templates.TemplateResponse(request, "index.html", {"static_version": STATIC_VERSION})
 
 
 @app.get("/scans/{scan_id}")

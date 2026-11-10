@@ -17,7 +17,7 @@ def create_scan(
     db: Session = Depends(get_db),
 ):
     try:
-        scan = scan_service.create_scan(db, payload.host, payload.scan_types)
+        scan = scan_service.create_scan(db, payload.host, payload.scan_types, payload.web_ports)
     except ValueError as e:
         raise HTTPException(400, str(e))
 

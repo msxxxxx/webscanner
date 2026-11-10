@@ -4,14 +4,21 @@ from app.core.logging_setup import logger
 from app.core.web_probe import get_web_ports
 
 
-def scan_tcp_host(target: str) -> tuple[list[str], list[dict]]:
+def scan_tcp_host(target: str, ports: list[int] | None = None) -> tuple[list[str], list[dict]]:
     """Сканирует TCP-порты и возвращает (tcp_results, web_ports)."""
     try:
-        logger.info("Starting TCP scan for %s", target)
+        if ports is None:
+            port_arg = "--top-ports 1000"
+        elif len(ports) == 0:
+            port_arg = "-p-"
+        else:
+            port_arg = f"-p {','.join(map(str, ports))}"
+        
+        logger.info("Starting TCP scan for %s (ports=%s)", target, port_arg)
         scanner = nmap.PortScanner()
         scanner.scan(
             target,
-            arguments="-sV -Pn --top-ports 1000 --open --host-timeout 5m --min-rate 500",
+            arguments=f"-sV -Pn {port_arg} --open --host-timeout 5m --min-rate 500",
         )
 
         results: list[str] = []

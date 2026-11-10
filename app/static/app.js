@@ -60,13 +60,23 @@ document.querySelector("#scan-form")?.addEventListener("submit", async (e) => {
             .filter(n => !isNaN(n) && n > 0 && n < 65536);
         if (!webPorts.length) webPorts = null;
     }
+    const tcpPortsRaw = form.tcp_ports?.value.trim() || "";
+    let tcpPorts = null;
+    if (tcpPortsRaw === "all") {
+        tcpPorts = [];                    // пустой массив = -p-
+    } else if (tcpPortsRaw) {
+        tcpPorts = tcpPortsRaw.split(",")
+            .map(s => parseInt(s.trim(), 10))
+            .filter(n => !isNaN(n) && n > 0 && n < 65536);
+        if (!tcpPorts.length) tcpPorts = null;
+    }
     const btn = form.querySelector("button");
     const msg = document.querySelector("#form-msg");
     btn.disabled = true; msg.textContent = "Создаю скан…";
     try {
         const scan = await api("/api/scans", {
             method: "POST",
-            body: JSON.stringify({ host, scan_types: types.length ? types : ["tcp"], web_ports: webPorts }),
+            body: JSON.stringify({ host, scan_types: types.length ? types : ["tcp"], web_ports: webPorts, tcp_ports: tcpPorts}),
         });
         msg.textContent = `Скан #${scan.id} запущен`;
         setTimeout(() => location.href = `/scans/${scan.id}`, 500);

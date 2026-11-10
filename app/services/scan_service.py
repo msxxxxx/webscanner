@@ -13,6 +13,7 @@ def create_scan(
     host: str,
     scan_types: list[str],
     web_ports: list[int] | None = None,
+    tcp_ports: list[int] | None = None
 ) -> Scan:
     bad = set(scan_types) - VALID_TYPES
     if bad:
@@ -26,6 +27,7 @@ def create_scan(
         status="pending",
         scan_types=scan_types,
         web_ports=web_ports,
+        tcp_ports=tcp_ports
     )
     db.add(scan)
     db.commit()

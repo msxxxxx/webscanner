@@ -18,6 +18,10 @@
             <label><input type="checkbox" name="type" value="dirsearch"> dirsearch</label>
             <label><input type="checkbox" name="type" value="nuclei"> nuclei</label>
             <label>Web-порты для dirsearch/nuclei (через запятую, пусто = все найденные)<input name="web_ports" placeholder="443,8443"><small style="color:#888">Применяется только если выбраны dirsearch/nuclei</small></label>
+            <label>TCP-порты для nmap (через запятую, пусто = top-1000, "all" = все)
+                <input name="tcp_ports" placeholder="80,443,8080 или all">
+                <small style="color:#888">"all" сканирует все 65535 портов — может занять 30+ мин</small>
+            </label>
         </fieldset>
         <button type="submit">Запустить скан</button>
         <span id="form-msg"></span>

@@ -16,6 +16,7 @@ def scan_target(
     host: str,
     scan_types: list[str] | None = None,
     web_ports_filter: list[int] | None = None,
+    tcp_ports: list[int] | None = None
 ) -> dict:
     """Полный скан одного хоста. web_ports_filter — ограничить dirsearch/nuclei."""
     scan_types = scan_types or ALL_TYPES
@@ -31,6 +32,7 @@ def scan_target(
         "web_ports_filter": web_ports_filter,
         "tcp": [],
         "web_ports": [],
+        "tcp_ports": tcp_ports,
         "ssl": [],
         "headers": [],
         "cert": [],
@@ -46,7 +48,7 @@ def scan_target(
         result["finished_at"] = datetime.now(timezone.utc).isoformat()
         return result
 
-    tcp_results, web_ports = scan_tcp_host(host)
+    tcp_results, web_ports = scan_tcp_host(host, tcp_ports)
     result["tcp"] = tcp_results
     result["web_ports"] = web_ports
 

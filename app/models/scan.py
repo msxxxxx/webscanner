@@ -18,6 +18,7 @@ class Scan(Base):
     status: Mapped[str] = mapped_column(String(16), default="pending", index=True)  # pending/running/done/failed
     scan_types: Mapped[list] = mapped_column(JSONType, default=list)      
     web_ports: Mapped[list | None] = mapped_column(JSONType, nullable=True)          # ["tcp","ssl","dirsearch","nuclei"]
+    tcp_ports: Mapped[list | None] = mapped_column(JSONType, nullable=True)
 
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

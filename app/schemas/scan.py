@@ -13,6 +13,10 @@ class ScanCreate(BaseModel):
         default=None,
         description="Порты для dirsearch/nuclei. None/пусто = все найденные web-порты.",
     )
+    tcp_ports: list[int] | None = Field(
+        default=None,
+        description="Порты для nmap. None = top-1000. Пустой список = все (-p-).",
+    )
 
 
 class ScanRead(BaseModel):
@@ -21,6 +25,7 @@ class ScanRead(BaseModel):
     status: str
     scan_types: list[str]
     web_ports: list[int] | None = None
+    tcp_ports: list[int] | None = None
     started_at: datetime | None
     finished_at: datetime | None
     error: str | None

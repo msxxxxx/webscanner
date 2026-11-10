@@ -19,7 +19,7 @@ def run_scan_job(scan_id: int) -> None:
         scan_service.mark_running(db, scan)
 
         try:
-            raw = scan_target(host, scan.scan_types, scan.web_ports)
+            raw = scan_target(host, scan.scan_types, scan.web_ports, scan.tcp_ports)
         except Exception as e:
             logger.exception("scan_target crashed for %s", host)
             scan_service.mark_failed(db, scan, f"scan_target crashed: {e}")

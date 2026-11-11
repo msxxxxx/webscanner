@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 {% block title %}msxscanner{% endblock %}
 {% block content %}
-<h1>Сканер</h1>
+<h1>Scanner</h1>
 
 <section class="card">
     <h2>Новый скан</h2>
     <form id="scan-form">
-        <label>Хост / IP
+        <label>FQDN / IP
             <input name="host" required placeholder="example.com или 1.2.3.4">
         </label>
         <fieldset>
-            <legend>Проверки</legend>
+            <legend>Scan Type</legend>
             <label><input type="checkbox" name="type" value="tcp" checked> TCP</label>
             <label><input type="checkbox" name="type" value="ssl"> SSL</label>
             <label><input type="checkbox" name="type" value="headers"> Headers</label>
             <label><input type="checkbox" name="type" value="cert"> Cert</label>
-            <label><input type="checkbox" name="type" value="dirsearch"> dirsearch</label>
-            <label><input type="checkbox" name="type" value="nuclei"> nuclei</label>
-            <label>Web-порты для dirsearch/nuclei (через запятую, пусто = все найденные)<input name="web_ports" placeholder="443,8443"><small style="color:#888">Применяется только если выбраны dirsearch/nuclei</small></label>
+            <label><input type="checkbox" name="type" value="dirsearch"> Dirsearch</label>
+            <label><input type="checkbox" name="type" value="nuclei"> Nuclei</label>
+            <label>Web-порты для Dirsearch/Nuclei (через запятую, пусто = все найденные)
+                <input name="web_ports" placeholder="443,8443">
+                <small style="color:#888">Применяется только если выбраны Dirsearch/Nuclei</small>
+            </label>
             <label>TCP-порты для nmap (через запятую, пусто = top-1000, "all" = все)
                 <input name="tcp_ports" placeholder="80,443,8080 или all">
                 <small style="color:#888">"all" сканирует все 65535 портов — может занять 30+ мин</small>

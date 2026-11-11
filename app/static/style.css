@@ -1,42 +1,247 @@
+/* ===== Переменные темы ===== */
+:root {
+    --bg:           #f5f5f7;
+    --bg-card:      #ffffff;
+    --bg-muted:     #f8f8fa;
+    --bg-input:     #ffffff;
+    --bg-code:      #f0f0f0;
+
+    --text:         #222222;
+    --text-muted:   #555555;
+    --text-dim:     #888888;
+
+    --border:       #e5e5e5;
+    --border-input: #cccccc;
+
+    --primary:      #4361ee;
+    --primary-hover:#3a53d0;
+
+    --sev-critical: #d00000;
+    --sev-high:     #e85d04;
+    --sev-medium:   #faa307;
+    --sev-low:      #219ebc;
+    --success:      #27ae60;
+
+    --shadow:       0 1px 3px rgba(0,0,0,.08);
+}
+
+/* ===== Тёмная тема (автоматически, если ОС в тёмном режиме) ===== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg:           #0f0f14;
+        --bg-card:      #1a1a23;
+        --bg-muted:     #22222e;
+        --bg-input:     #12121a;
+        --bg-code:      #2a2a36;
+
+        --text:         #e4e4e8;
+        --text-muted:   #a0a0ab;
+        --text-dim:     #6b6b78;
+
+        --border:       #2e2e3a;
+        --border-input: #3a3a48;
+
+        --primary:      #5b7cfa;
+        --primary-hover:#4a6be8;
+
+        --sev-critical: #ff6b6b;
+        --sev-high:     #ff9b54;
+        --sev-medium:   #ffd166;
+        --sev-low:      #4cc9f0;
+        --success:      #4ade80;
+
+        --shadow:       0 1px 3px rgba(0,0,0,.4);
+    }
+}
+
+/* ===== Ручная тёмная тема (через кнопку) ===== */
+html[data-theme="dark"] {
+    --bg:           #0f0f14;
+    --bg-card:      #1a1a23;
+    --bg-muted:     #22222e;
+    --bg-input:     #12121a;
+    --bg-code:      #2a2a36;
+    --text:         #e4e4e8;
+    --text-muted:   #a0a0ab;
+    --text-dim:     #6b6b78;
+    --border:       #2e2e3a;
+    --border-input: #3a3a48;
+    --primary:      #5b7cfa;
+    --primary-hover:#4a6be8;
+    --sev-critical: #ff6b6b;
+    --sev-high:     #ff9b54;
+    --sev-medium:   #ffd166;
+    --sev-low:      #4cc9f0;
+    --success:      #4ade80;
+    --shadow:       0 1px 3px rgba(0,0,0,.4);
+}
+
+/* ===== Базовое ===== */
 * { box-sizing: border-box; }
-body { font-family: system-ui, sans-serif; margin: 0; background: #f5f5f7; color: #222; }
-header { background: #1a1a2e; color: white; padding: 12px 24px; display: flex;
-         justify-content: space-between; align-items: center; }
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
+}
+
+/* ===== Хедер ===== */
+header {
+    background: #1a1a2e;
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+html[data-theme="dark"] header,
+@media (prefers-color-scheme: dark) { header { background: #14141f; } }
+
 header a { color: white; text-decoration: none; margin-left: 16px; }
-header .logo { font-weight: bold; font-size: 1.2em; }
+header .logo { font-weight: bold; font-size: 1.2em; margin-left: 0; }
+
+.theme-toggle {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.3);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+.theme-toggle:hover { background: rgba(255,255,255,.1); }
+
+/* ===== Layout ===== */
 main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-.card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-h1 { margin-top: 0; }
+
+.card {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: background 0.2s;
+}
+
+h1, h2, h3 { color: var(--text); }
+
+/* ===== Таблицы ===== */
 table { width: 100%; border-collapse: collapse; }
-th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
-th { background: #f8f8fa; font-size: 0.9em; color: #555; }
+th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+th {
+    background: var(--bg-muted);
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+/* ===== Формы ===== */
 form label { display: block; margin-bottom: 8px; }
-form input[type=text], form input[name=host] { width: 100%; padding: 8px;
-    border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
-form fieldset { border: 1px solid #ddd; border-radius: 6px; margin: 12px 0;
-    padding: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
+form input[type=text],
+form input[name=host],
+form input[name=web_ports],
+form input[name=tcp_ports] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-input);
+    border-radius: 4px;
+    font-size: 1em;
+    background: var(--bg-input);
+    color: var(--text);
+}
+form input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+form fieldset {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin: 12px 0;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
 form fieldset label { display: inline-flex; align-items: center; gap: 4px; }
-button, .button { background: #4361ee; color: white; border: none;
-    padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 1em;
-    text-decoration: none; display: inline-block; }
-button:hover, .button:hover { background: #3a53d0; }
-button:disabled { background: #aaa; cursor: wait; }
-#form-msg { margin-left: 12px; color: #666; }
+
+/* inline-поля портов */
+.port-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.port-input-row input {
+    flex: 1;
+    max-width: 320px;
+}
+.port-input-row small {
+    color: var(--text-dim);
+    font-size: 0.85em;
+}
+
+/* ===== Кнопки ===== */
+button, .button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+}
+button:hover, .button:hover { background: var(--primary-hover); }
+button:disabled { background: #555; cursor: wait; opacity: .7; }
+
+#form-msg { margin-left: 12px; color: var(--text-muted); }
+
+/* ===== Статистика ===== */
 .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.stat { background: white; padding: 16px 20px; border-radius: 8px; min-width: 100px;
-        text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.stat {
+    background: var(--bg-card);
+    padding: 16px 20px;
+    border-radius: 8px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
 .stat .num { font-size: 1.8em; font-weight: bold; }
-.stat.critical .num { color: #d00000; }
-.stat.high .num { color: #e85d04; }
-.stat.medium .num { color: #faa307; }
-.stat.low .num { color: #219ebc; }
-.sev-critical { color: #d00000; font-weight: bold; }
-.sev-high { color: #e85d04; font-weight: bold; }
-.sev-medium { color: #faa307; font-weight: bold; }
-.sev-low { color: #219ebc; }
-.error { color: #d00000; }
-.status-pending { color: #888; }
-.status-running { color: #faa307; font-weight: bold; }
-.status-done    { color: #27ae60; font-weight: bold; }
-.status-failed  { color: #d00000; font-weight: bold; }
+.stat.critical .num { color: var(--sev-critical); }
+.stat.high .num { color: var(--sev-high); }
+.stat.medium .num { color: var(--sev-medium); }
+.stat.low .num { color: var(--sev-low); }
+
+/* ===== Severity ===== */
+.sev-critical { color: var(--sev-critical); font-weight: bold; }
+.sev-high     { color: var(--sev-high);     font-weight: bold; }
+.sev-medium   { color: var(--sev-medium);   font-weight: bold; }
+.sev-low      { color: var(--sev-low); }
+.sev-info     { color: var(--text-muted); }
+
+/* ===== Статусы сканов ===== */
+.status-pending { color: var(--text-dim); }
+.status-running { color: var(--sev-medium); font-weight: bold; }
+.status-done    { color: var(--success);    font-weight: bold; }
+.status-failed  { color: var(--sev-critical); font-weight: bold; }
+
+.error { color: var(--sev-critical); }
+
+/* ===== Code ===== */
+code {
+    background: var(--bg-code);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* ===== Ссылки в контенте ===== */
+a { color: var(--primary); }
+a.button, header a { color: white; }

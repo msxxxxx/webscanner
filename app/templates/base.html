@@ -2,8 +2,18 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}msxscanner{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}myscanner{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css?v={{ static_version|default(1) }}">
+    <script>
+        // Применяем тему ДО рендера, чтобы не было вспышки
+        (function() {
+            const saved = localStorage.getItem("theme");
+            if (saved === "dark" || saved === "light") {
+                document.documentElement.setAttribute("data-theme", saved);
+            }
+        })();
+    </script>
 </head>
 <body>
     <header>
@@ -11,11 +21,12 @@
         <nav>
             <a href="/">Main</a>
             <a href="/docs" target="_blank">API docs</a>
+            <button class="theme-toggle" id="theme-toggle" title="Переключить тему">dark</button>
         </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <script src="/static/app.js?v={{ static_version }}"></script>
+    <script src="/static/app.js?v={{ static_version|default(1) }}"></script>
 </body>
 </html>

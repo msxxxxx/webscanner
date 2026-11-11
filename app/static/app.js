@@ -126,7 +126,49 @@ async function loadFindings() {
         </tr>`).join("");
 }
 
+// === Тема ===
+function applyTheme(theme) {
+    if (theme === "dark" || theme === "light") {
+        document.documentElement.setAttribute("data-theme", theme);
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+    }
+    const btn = document.querySelector("#theme-toggle");
+    if (btn) {
+        const isDark = theme === "dark" ||
+            (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        btn.textContent = isDark ? "light" : "dark";
+    }
+}
+
+function initThemeToggle() {
+    const btn = document.querySelector("#theme-toggle");
+    if (!btn) return;
+
+    // начальное состояние: сохранённая тема или системная
+    let saved = localStorage.getItem("theme");
+    applyTheme(saved);
+
+    btn.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        let next;
+        if (current === "dark") {
+            next = "light";
+        } else if (current === "light") {
+            next = "dark";
+        } else {
+            // авто-режим: переключаем на противоположное системному
+            const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            next = systemDark ? "light" : "dark";
+        }
+        localStorage.setItem("theme", next);
+        applyTheme(next);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
+
     if (document.querySelector("#targets-table")) { loadTargets(); loadScans(); }
     if (window.SCAN_ID) { pollScan(); }
 });

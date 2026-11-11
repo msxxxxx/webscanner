@@ -166,9 +166,23 @@ function initThemeToggle() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    initThemeToggle();
+// document.addEventListener("DOMContentLoaded", () => {
+//     initThemeToggle();
 
-    if (document.querySelector("#targets-table")) { loadTargets(); loadScans(); }
-    if (window.SCAN_ID) { pollScan(); }
+//     if (document.querySelector("#targets-table")) { loadTargets(); loadScans(); }
+//     if (window.SCAN_ID) { pollScan(); }
+// });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Тема
+    if (typeof initThemeToggle === "function") initThemeToggle();
+
+    // Сканы — грузим всегда, если есть таблица
+    if (document.querySelector("#scans-table")) loadScans();
+
+    // Цели — грузим только если таблица есть (можно потом вернуть)
+    if (document.querySelector("#targets-table")) loadTargets();
+
+    // Детали конкретного скана
+    if (window.SCAN_ID) pollScan();
 });
